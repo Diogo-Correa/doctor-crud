@@ -27,8 +27,7 @@ const doctorCreateSchema = z.object({
 })
 
 const searchParamsSchema = z.object({
-    name: z.string().optional(),
-    crm: z.string().optional()
+    key: z.string()
 })
 
 const doctorParamsSchema = z.object({

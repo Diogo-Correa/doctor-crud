@@ -1,3 +1,4 @@
+import { z } from "zod";
 import { getCreatedAt } from "../../libs/getCreatedAt";
 import { prisma } from "../../libs/prisma";
 import { CreateDoctorInput } from "./doctors.schema";
@@ -31,7 +32,7 @@ export async function createDoctor(input: CreateDoctorInput) {
 export async function showDoctorById(id: number) {
     const doctor = await prisma.doctor.findUnique({
         where: {
-            id
+            id: Number(id)
         },
         include: {
             crm: true,
@@ -51,10 +52,10 @@ export async function showDoctorByName(name: string) {
     return doctor;
 }
 
-export async function showDoctorByCRM(crm: string) {
-    const doctor = await prisma.cRM.findUnique({
+export async function showDoctorByCRM(number: string) {
+    const doctor = await prisma.cRM.findFirstOrThrow({
         where: {
-            number: crm
+            number
         },
         include: {
             doctor: true
@@ -63,10 +64,37 @@ export async function showDoctorByCRM(crm: string) {
     return doctor;
 }
 
+export async function updateDoctor(id: number, input: CreateDoctorInput) {
+    const { phones, crm, ...rest } = input;
+    const doctor_id = Number(id);
+
+    const doctor = await prisma.doctor.update({
+        where: {
+            id: doctor_id
+        },
+        data: {
+            ...rest,
+            crm: {
+                update: {
+                    data: {
+                        ...crm
+                    }
+                }
+            },
+        },
+        include: {
+            crm: true,
+            phones: true,
+            specialty: true
+        }
+    })
+    return doctor;
+}
+
 export async function deleteDoctor(id: number) {
     await prisma.doctor.delete({
         where: {
-            id
+            id: Number(id)
         }
     })
 }

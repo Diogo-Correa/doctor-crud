@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { prisma } from "../../libs/prisma";
 import { CreateDoctorInput, DoctorParams, SearchParams } from "./doctors.schema";
-import { createDoctor, deleteDoctor, showDoctorByCRM, showDoctorById, showDoctorByName } from "./doctors.services";
+import { createDoctor, deleteDoctor, showDoctorByCRM, showDoctorById, showDoctorByName, updateDoctor } from "./doctors.services";
 
 export async function listDoctorsHandle() {
     const doctors = await prisma.doctor.findMany({});
@@ -34,6 +34,24 @@ export async function showDoctorHandle(
     }
 }
 
+export async function updateDoctorHandle(
+    request: FastifyRequest<{
+        Params: DoctorParams;
+        Body: CreateDoctorInput;
+    }>,
+    reply: FastifyReply
+) {
+    const body = request.body;
+    const id = request.params.id;
+
+    try {
+        const doctor = await updateDoctor(id, body);
+        return reply.code(200).send(doctor);
+    } catch (e) {
+        return reply.code(500).send(e);
+    }
+}
+
 export async function deleteDoctorHandle(
     request: FastifyRequest<{ Params: DoctorParams }>,
     reply: FastifyReply
@@ -53,20 +71,13 @@ export async function searchDorctorHandle(
 ) {
     try {
 
-        const crm = request.params.crm;
-        const name = request.params.name;
+        let result;
 
-        if (crm)
-            return reply.code(200).send(
-                await showDoctorByCRM(crm)
-            )
+        result = await showDoctorByCRM(request.params.key);
 
-        if (name)
-            return reply.code(200).send(
-                await showDoctorByName(name)
-            )
+        if (!result) result = await showDoctorByName(request.params.key);
 
-        return reply.code(200).send([]);
+        return reply.code(200).send(result);
 
     } catch (e) {
         return reply.code(500).send(e);
