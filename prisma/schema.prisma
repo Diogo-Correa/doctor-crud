@@ -1,0 +1,63 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Doctor {
+  id Int @id @default(autoincrement())
+  name String
+  phones Phone[]
+  crm CRM?
+  specialty_id Int
+
+  created_at DateTime
+  updated_at DateTime @updatedAt
+
+  specialty Specialty @relation(fields: [specialty_id], references: [id])
+
+  @@map("doctors")
+}
+
+model Phone {
+  id Int @id @default(autoincrement())
+  number String
+  doctor_id Int
+
+  created_at DateTime
+  updated_at DateTime @updatedAt
+
+  doctor Doctor @relation(fields: [doctor_id], references: [id])
+  @@unique([number, doctor_id])
+  @@map("doctors_phones")
+}
+
+model CRM {
+  id Int @id @default(autoincrement())
+  number String @unique
+  doctor_id Int @unique
+
+  created_at DateTime
+  updated_at DateTime @updatedAt
+
+  doctor Doctor @relation(fields: [doctor_id], references: [id])
+  @@unique([number, doctor_id])
+  @@map("doctors_crm")
+}
+
+model Specialty {
+  id Int @id @default(autoincrement())
+  name String @unique
+  doctors Doctor[]
+
+  created_at DateTime
+  updated_at DateTime @updatedAt
+
+  @@map("doctors_specialties")
+}
