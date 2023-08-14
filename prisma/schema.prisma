@@ -32,7 +32,7 @@ model Phone {
 
   updated_at DateTime @updatedAt
 
-  doctor Doctor @relation(fields: [doctor_id], references: [id])
+  doctor Doctor @relation(fields: [doctor_id], references: [id], onDelete: Cascade)
   @@unique([number, doctor_id])
   @@map("doctors_phones")
 }
@@ -45,7 +45,7 @@ model CRM {
   created_at DateTime
   updated_at DateTime @updatedAt
 
-  doctor Doctor @relation(fields: [doctor_id], references: [id])
+  doctor Doctor @relation(fields: [doctor_id], references: [id], onDelete: Cascade)
   @@unique([number, doctor_id])
   @@map("doctors_crm")
 }
