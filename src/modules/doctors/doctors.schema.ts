@@ -6,7 +6,7 @@ const crmCore = {
 }
 
 const phonesCore = {
-    number: z.string().min(11).max(11)
+    number: z.string().min(10).max(11)
 }
 
 const doctorCore = {

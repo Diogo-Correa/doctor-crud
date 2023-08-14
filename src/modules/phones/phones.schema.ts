@@ -2,7 +2,7 @@ import { buildJsonSchemas } from "fastify-zod";
 import { z } from "zod";
 
 const phoneCore = {
-    number: z.string()
+    number: z.string().min(10).max(11)
 }
 
 
