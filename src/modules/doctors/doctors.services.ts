@@ -5,7 +5,8 @@ import { CreateDoctorInput } from "./doctors.schema";
 export async function listDoctors() {
     const doctors = await prisma.doctor.findMany({
         include: {
-            specialty: true
+            specialty: true,
+            crm: true
         },
         orderBy: {
             name: "asc"
