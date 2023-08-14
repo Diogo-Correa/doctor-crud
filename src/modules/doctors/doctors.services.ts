@@ -1,7 +1,18 @@
-import { z } from "zod";
 import { getCreatedAt } from "../../libs/getCreatedAt";
 import { prisma } from "../../libs/prisma";
 import { CreateDoctorInput } from "./doctors.schema";
+
+export async function listDoctors() {
+    const doctors = await prisma.doctor.findMany({
+        include: {
+            specialty: true
+        },
+        orderBy: {
+            name: "asc"
+        }
+    });
+    return doctors;
+}
 
 export async function createDoctor(input: CreateDoctorInput) {
     const today = getCreatedAt();

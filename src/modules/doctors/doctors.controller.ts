@@ -1,10 +1,10 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { prisma } from "../../libs/prisma";
 import { CreateDoctorInput, DoctorParams, SearchParams } from "./doctors.schema";
-import { createDoctor, deleteDoctor, showDoctorByCRM, showDoctorById, showDoctorByName, updateDoctor } from "./doctors.services";
+import { createDoctor, deleteDoctor, listDoctors, showDoctorByCRM, showDoctorById, showDoctorByName, updateDoctor } from "./doctors.services";
 
 export async function listDoctorsHandle() {
-    const doctors = await prisma.doctor.findMany({});
+    const doctors = await listDoctors();
     return doctors;
 }
 
