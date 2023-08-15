@@ -36,6 +36,10 @@ export async function createDoctor(input: CreateDoctorInput) {
                     created_at: today
                 }
             }
+        },
+        include: {
+            phones: true,
+            crm: true
         }
     })
     return doctor;
@@ -52,27 +56,6 @@ export async function showDoctorById(id: number) {
             specialty: true
         }
     })
-    return doctor;
-}
-
-export async function showDoctorByName(name: string) {
-    const doctor = await prisma.doctor.findMany({
-        where: {
-            name
-        }
-    })
-    return doctor;
-}
-
-export async function showDoctorByCRM(number: string) {
-    const doctor = await prisma.cRM.findFirstOrThrow({
-        where: {
-            number
-        },
-        include: {
-            doctor: true
-        }
-    });
     return doctor;
 }
 

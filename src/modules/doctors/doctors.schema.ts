@@ -1,48 +1,54 @@
 import { buildJsonSchemas } from "fastify-zod";
 import { z } from "zod";
 
-const crmCore = {
-    number: z.string().min(11).max(11)
-}
-
-const phonesCore = {
-    number: z.string().min(10).max(11)
-}
-
 const doctorCore = {
-    name: z.string().min(3),
+    name: z.string().min(3).nonempty("O nome é obrigatório.").regex(/^[A-Za-z\s]+$/i, "Apenas letras são permitidas."),
+    specialty_id: z.number(),
     crm: z.object({
-        ...crmCore
+        number: z.string()
     }),
-    phones: z.array(
-        z.object({
-            ...phonesCore
-        })
-    ),
-    specialty_id: z.number().int().positive(),
 }
 
 const doctorCreateSchema = z.object({
-    ...doctorCore
+    ...doctorCore,
+    phones: z.array(
+        z.object({
+            number: z.string().min(10).max(11).regex(/^\d+$/)
+        })
+    ),
 })
 
-const searchParamsSchema = z.object({
-    key: z.string()
+const doctorShowSchema = z.object({
+    ...doctorCore,
+    id: z.number(),
+    specialty: z.object({
+        name: z.string()
+    }),
+    phones: z.array(
+        z.object({
+            id: z.number(),
+            number: z.string()
+        })
+    ),
+})
+
+const doctorUpdateSchema = z.object({
+    ...doctorCore,
 })
 
 const doctorParamsSchema = z.object({
-    id: z.number().int().positive(),
+    id: z.number(),
 })
 
 export const { schemas: doctorSchemas, $ref } = buildJsonSchemas(
     {
         doctorCreateSchema,
         doctorParamsSchema,
-        searchParamsSchema
+        doctorUpdateSchema,
+        doctorShowSchema
     },
     { $id: "doctorSchemas" }
 );
 
 export type CreateDoctorInput = z.infer<typeof doctorCreateSchema>;
 export type DoctorParams = z.infer<typeof doctorParamsSchema>;
-export type SearchParams = z.infer<typeof searchParamsSchema>;

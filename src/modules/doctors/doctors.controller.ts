@@ -1,7 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { prisma } from "../../libs/prisma";
-import { CreateDoctorInput, DoctorParams, SearchParams } from "./doctors.schema";
-import { createDoctor, deleteDoctor, listDoctors, showDoctorByCRM, showDoctorById, showDoctorByName, updateDoctor } from "./doctors.services";
+import { CreateDoctorInput, DoctorParams } from "./doctors.schema";
+import { createDoctor, deleteDoctor, listDoctors, showDoctorById, updateDoctor } from "./doctors.services";
 import { createPhone, deletePhone } from "../phones/phones.services";
 import { CreateManyPhoneInput } from "../phones/phones.schema";
 
@@ -29,7 +28,7 @@ export async function showDoctorHandle(
 ) {
     try {
         const doctor = await showDoctorById(request.params.id);
-        return reply.code(200).send(doctor);
+        return reply.code(201).send(doctor);
 
     } catch (e) {
         return reply.code(500).send(e);
@@ -48,7 +47,7 @@ export async function updateDoctorHandle(
 
     try {
         const doctor = await updateDoctor(id, body);
-        return reply.code(200).send(doctor);
+        return reply.code(201).send(doctor);
     } catch (e) {
         return reply.code(500).send(e);
     }
@@ -60,7 +59,7 @@ export async function deleteDoctorHandle(
 ) {
     try {
         await deleteDoctor(request.params.id);
-        return reply.code(200).send([]);
+        return reply.code(201).send([]);
     } catch (e) {
         return reply.code(500).send(e);
     }
@@ -84,7 +83,7 @@ export async function deletePhoneHandle(
 ) {
     try {
         await deletePhone(request.params.id);
-        return reply.code(200).send([]);
+        return reply.code(201).send([]);
     } catch (e) {
         return reply.code(500).send(e);
     }
