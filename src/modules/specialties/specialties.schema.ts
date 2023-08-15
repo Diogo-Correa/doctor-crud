@@ -10,7 +10,7 @@ const specialtyCreateSchema = z.object({
 });
 
 const specialtyParamsSchema = z.object({
-    id: z.number().int().positive(),
+    id: z.number(),
 })
 
 export const { schemas: specialtySchemas, $ref } = buildJsonSchemas(
