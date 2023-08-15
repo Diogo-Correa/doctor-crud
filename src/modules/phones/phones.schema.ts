@@ -2,7 +2,7 @@ import { buildJsonSchemas } from "fastify-zod";
 import { z } from "zod";
 
 const phoneCore = {
-    number: z.string().min(10).max(11)
+    number: z.string().min(10).max(11).regex(/^\d+$/)
 }
 
 
@@ -17,9 +17,15 @@ const phoneCreateManySchema = z.array(
     })
 )
 
+const phoneParamsSchema = z.object({
+    id: z.number(),
+})
+
 export const { schemas: phonesSchemas, $ref } = buildJsonSchemas(
     {
-        phoneCreateSchema
+        phoneCreateSchema,
+        phoneCreateManySchema,
+        phoneParamsSchema
     },
     { $id: "phonesSchemas" }
 );

@@ -1,6 +1,7 @@
 import { FastifyInstance } from "fastify";
 import { createDoctorHandle, createManyPhones, deleteDoctorHandle, deletePhoneHandle, listDoctorsHandle, showDoctorHandle, updateDoctorHandle } from "./doctors.controller";
 import { $ref } from "./doctors.schema";
+import { $ref as $phoneRef } from "../phones/phones.schema";
 
 export async function doctorsRoutes(app: FastifyInstance) {
     app.get('/', {
@@ -54,19 +55,4 @@ export async function doctorsRoutes(app: FastifyInstance) {
             params: $ref("doctorParamsSchema")
         },
     }, deleteDoctorHandle);
-
-    app.post('/phones', {
-        schema: {
-            tags: ["Phones routes"],
-            description: "Create phones to doctor",
-        },
-    }, createManyPhones);
-
-    app.delete('/phones/:id', {
-        schema: {
-            tags: ["Phones routes"],
-            description: "Delete phone from doctor",
-            params: $ref("doctorParamsSchema")
-        },
-    }, deletePhoneHandle);
 }

@@ -5,7 +5,7 @@ const doctorCore = {
     name: z.string().min(3).nonempty("O nome é obrigatório.").regex(/^[A-Za-z\s]+$/i, "Apenas letras são permitidas."),
     specialty_id: z.number(),
     crm: z.object({
-        number: z.string()
+        number: z.string().min(6).max(6).regex(/^\d+$/)
     }),
 }
 

@@ -8,6 +8,7 @@ import swaggerUI from "@fastify/swagger-ui";
 import { SwaggerTheme } from "swagger-themes";
 import { specialtySchemas } from "../modules/specialties/specialties.schema";
 import { phonesSchemas } from "../modules/phones/phones.schema";
+import { phonesRoutes } from "../modules/phones/phones.routes";
 
 export async function appRoutes(app: FastifyInstance) {
     app.register(swagger, {
@@ -62,5 +63,6 @@ export async function appRoutes(app: FastifyInstance) {
     });
 
     app.register(doctorsRoutes, { prefix: '/doctors' });
+    app.register(phonesRoutes, { prefix: '/doctors' });
     app.register(specialtyRoutes, { prefix: '/specialties' });
 }
