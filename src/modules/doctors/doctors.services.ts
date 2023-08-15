@@ -5,7 +5,15 @@ import { CreateDoctorInput } from "./doctors.schema";
 export async function listDoctors() {
     const doctors = await prisma.doctor.findMany({
         include: {
-            specialty: true,
+            specialties: {
+                select: {
+                    specialty: {
+                        select: {
+                            name: true
+                        }
+                    }
+                }
+            },
             crm: true
         },
         orderBy: {
@@ -17,12 +25,19 @@ export async function listDoctors() {
 
 export async function createDoctor(input: CreateDoctorInput) {
     const today = getCreatedAt();
-    const { phones, crm, ...rest } = input;
+    const { phones, crm, specialties, ...rest } = input;
 
     const doctor = await prisma.doctor.create({
         data: {
             ...rest,
             created_at: today,
+            specialties: {
+                createMany: {
+                    data: [
+                        ...specialties
+                    ]
+                }
+            },
             phones: {
                 createMany: {
                     data: [
@@ -39,7 +54,16 @@ export async function createDoctor(input: CreateDoctorInput) {
         },
         include: {
             phones: true,
-            crm: true
+            crm: true,
+            specialties: {
+                select: {
+                    specialty: {
+                        select: {
+                            name: true
+                        }
+                    }
+                }
+            }
         }
     })
     return doctor;
@@ -53,14 +77,22 @@ export async function showDoctorById(id: number) {
         include: {
             crm: true,
             phones: true,
-            specialty: true
+            specialties: {
+                select: {
+                    specialty: {
+                        select: {
+                            name: true
+                        }
+                    }
+                }
+            }
         }
     })
     return doctor;
 }
 
 export async function updateDoctor(id: number, input: CreateDoctorInput) {
-    const { phones, crm, ...rest } = input;
+    const { phones, crm, specialties, ...rest } = input;
     const doctor_id = Number(id);
 
     const doctor = await prisma.doctor.update({
@@ -80,7 +112,15 @@ export async function updateDoctor(id: number, input: CreateDoctorInput) {
         include: {
             crm: true,
             phones: true,
-            specialty: true
+            specialties: {
+                select: {
+                    specialty: {
+                        select: {
+                            name: true
+                        }
+                    }
+                }
+            }
         }
     })
     return doctor;

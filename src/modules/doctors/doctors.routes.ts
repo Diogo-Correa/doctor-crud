@@ -20,7 +20,7 @@ export async function doctorsRoutes(app: FastifyInstance) {
             description: "Create doctors",
             body: $ref("doctorCreateSchema"),
             response: {
-                201: $ref("doctorCreateSchema"),
+                201: $ref("doctorShowSchema"),
             },
         },
     }, createDoctorHandle);

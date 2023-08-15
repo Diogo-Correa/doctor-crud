@@ -15,12 +15,10 @@ model Doctor {
   name String
   phones Phone[]
   crm CRM?
-  specialty_id Int
+  specialties DoctorSpecialty[]
 
   created_at DateTime
   updated_at DateTime @updatedAt
-
-  specialty Specialty @relation(fields: [specialty_id], references: [id])
 
   @@map("doctors")
 }
@@ -39,24 +37,38 @@ model Phone {
 
 model CRM {
   id Int @id @default(autoincrement())
-  number String @unique
+  number String
   doctor_id Int @unique
+  uf String
 
   created_at DateTime
   updated_at DateTime @updatedAt
 
   doctor Doctor @relation(fields: [doctor_id], references: [id], onDelete: Cascade)
-  @@unique([number, doctor_id])
+  @@unique([number, uf])
   @@map("doctors_crm")
 }
 
 model Specialty {
   id Int @id @default(autoincrement())
   name String @unique
-  doctors Doctor[]
+  doctors DoctorSpecialty[]
 
   created_at DateTime
   updated_at DateTime @updatedAt
 
-  @@map("doctors_specialties")
+  @@map("specialties")
+}
+
+model DoctorSpecialty {
+  doctor_id Int
+  specialty_id Int
+  
+  updated_at DateTime @updatedAt
+
+  doctor Doctor @relation(fields: [doctor_id], references: [id], onDelete: Cascade)
+  specialty Specialty @relation(fields: [specialty_id], references: [id], onDelete: Cascade)
+
+  @@unique([doctor_id, specialty_id])
+  @@map("doctor_specialties")
 }
