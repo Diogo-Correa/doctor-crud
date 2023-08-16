@@ -30,7 +30,7 @@ export async function appRoutes(app: FastifyInstance) {
         },
     });
     app.register(swaggerUI, {
-        routePrefix: "/docs",
+        routePrefix: "/",
         staticCSP: false,
         uiConfig: {
             filter: true,
@@ -52,15 +52,6 @@ export async function appRoutes(app: FastifyInstance) {
         ...phonesSchemas
     ])
         app.addSchema(schema);
-
-    app.get("/", () => {
-        return {
-            name,
-            version,
-            author,
-            description,
-        };
-    });
 
     app.register(doctorsRoutes, { prefix: '/doctors' });
     app.register(phonesRoutes, { prefix: '/doctors' });
